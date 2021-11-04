@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Faker\Provider\Lorem;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class StoreFactory extends Factory
