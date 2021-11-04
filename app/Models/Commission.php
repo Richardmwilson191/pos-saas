@@ -10,6 +10,7 @@ class Commission extends Model
     use HasFactory;
 
     protected $fillable = [
-        
+        'store_id',
+        'commission_rate'
     ];
 }

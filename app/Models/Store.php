@@ -11,6 +11,17 @@ class Store extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        
+        'user_id',
+        'contact_id',
+        'store_type_id',
+        'name',
+        'title',
+        'banner_message',
+        'slogan',
+        'mission',
+        'theme',
+        'desc',
+        'theme',
+        'logo_path'
     ];
 }

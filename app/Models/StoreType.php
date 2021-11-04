@@ -10,6 +10,6 @@ class StoreType extends Model
     use HasFactory;
 
     protected $fillable = [
-        
+        'type'
     ];
 }

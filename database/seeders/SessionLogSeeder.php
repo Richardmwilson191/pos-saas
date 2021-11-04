@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\SessionLog;
 
 class SessionLogSeeder extends Seeder
 {
@@ -13,6 +14,15 @@ class SessionLogSeeder extends Seeder
      */
     public function run()
     {
-        //
+        $sessionlogs=[
+            [
+
+            ]
+        ];
+
+        foreach ($sessionlogs as $key => $value) {
+            # code...
+            SessionLog::create($value);
+        }
     }
 }

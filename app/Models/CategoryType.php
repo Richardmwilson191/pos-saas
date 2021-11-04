@@ -10,6 +10,6 @@ class CategoryType extends Model
     use HasFactory;
 
     protected $fillable = [
-        
+        'type'
     ];
 }

@@ -16,16 +16,33 @@ class DatabaseSeeder extends Seeder
         //has to run in the order of the migrations
 
         \App\Models\User::factory(10)->create();
-        $this->call(
+        // $this->call([
+
+        // ]);
+        // \App\Models\Store::factory(6)->create();
+        // $this->call(
+
+        // );
+        // \App\Models\Category::factory(10)->create();
+
+        $this->call([
+            
             ContactSeeder::class,
             StoreTypeSeeder::class,
-        );
-        \App\Models\Store::factory(6)->create();
-        $this->call(
+            StoreSeeder::Class,
             BannerSeeder::class,
+            BrandSeeder::Class,
+            ProductSeeder::class,
+            RatingSeeder::class,
+            CouponSeeder::class,            
+            UsedCouponSeeder::class,
             CartSeeder::class,
+            SalesAssociateSeeder::class,
             CategoryTypeSeeder::class,
-        );
-        \App\Models\Category::factory(10)->create();
+            SalesSeeder::class,
+            InvoiceSeeder::class,
+            CommissionSeeder::class,
+
+        ]);
     }
 }

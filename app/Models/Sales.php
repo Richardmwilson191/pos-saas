@@ -10,6 +10,10 @@ class Sales extends Model
     use HasFactory;
 
     protected $fillable = [
-        
+        'sales_associate_id',
+        'customer_id',
+        't_quantity',
+        't_amount',
+        'date'
     ];
 }
