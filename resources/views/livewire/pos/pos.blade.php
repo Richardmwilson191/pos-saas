@@ -10,12 +10,21 @@
                     <div class="flex justify-between text-gray-700 font-bold text-3xl px-5 pt-5 mb-3">
                         <h1>Select Product</h1>
 
-                        <div>
+                        <div class="flex">
                             <h1 id="selectCustomer" class="text-gray-700 font-normal  hover:underline hover:text-blue-500 cursor-pointer ">
-                                {{$customerInfo['name'] ?? "Select customer"}}
+                                {{ "Select customer"}}
                             </h1>
+                            <div class="">
+                                <input wire:model.lazy="customerInfo.name" type="text" list="customersname" inputmode="search" class="border-t-0 border-r-0 border-l-0 border-b-2 focus:border-t-0 focus:border-r-0 focus:border-l-0 focus:border-b-2 appearance-none ring-transparent">
+                                <datalist id="customersname">
+                                    @foreach ($customers as $customer)
+                                        <option value="{{$customer->customer_name}}">
+                                    @endforeach
+                                  </datalist>
+                            </div>
                             
                         </div>
+                       
 
                         <div class="relative text-gray-600">
                             <input type="search" wire:model="search" placeholder="Search"
@@ -191,31 +200,42 @@
                 </div>
                 </div>
 
-
+                <!------CART------>
                 <div class="w-4/12 bg-white h-full pb rounded-lg overflow-hidden bg-cover bg-center">
 
                     <div class="w-full py-6 px-4 bg-indigo-600">
                         <h1 class="text-white font-bold text-3xl">Summary</h1>
                     </div>
 
-                    <div class="sales_details mx-5 h-3/6 mt-5 p-5  bg-white border border-gray-500">
+                    <div class="sales_details mx-5 h-3/6 mt-5 p-5 overflow-y-auto bg-white border border-gray-500">
                         <table class="w-full">
                             <tr class="border-b-2 mb-2 text-left">
-                                <th class="py-2">Product</th>
                                 <th class="py-2">Qty</th>
+                                <th class="py-2">Product</th>
                                 <th class="py-2">Description</th>
                                 <th class="py-2">Price</th>
                                 <th class="py-2">Total</th>
                             </tr>
                     
                             @foreach ($cartItems as $item)
-                            <tr>
+                            {{-- {{dd($item->id)}} --}}
+                            <tr class="group">
+                                <td class="py-2 px-1">{{$item->qty}}</td>
                                 <td class="py-2">{{$item->product->name}}</td>
-                                <td class="py-2">{{$item->qty}}</td>
                                 <td class="py-2">{{$item->product->desc}}</td>
                                 <td class="py-2">{{response()->currency($item->product->price)}}</td>
                                 <td class="py-2">{{response()->currency(($item->product->price * $item->qty))}}</td>
+                                <td class="opacity-0 group-hover:opacity-100 -px-2">
+                                    <button type="button" 
+                                        wire:click="cartDelete($event.target.value)" 
+                                        value="{{$item->id}}">
+                                        <i class="fas fa-trash-alt text-red-500"></i>
+                                    </button>
+                                </td>
                             </tr>
+                            @php
+                                $this->total += $item->product->price * $item->qty;
+                            @endphp
                             @endforeach
                            
                               
@@ -226,7 +246,7 @@
                         <div class="w-full space-y-1">
                             <div class="flex justify-between">
                                 <span>Sub Total</span>
-                                <span>$158,550.00</span>
+                                <span>{{$total ? response()->currency($total) : "$0.00"}}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span>Tax:</span>
@@ -234,7 +254,7 @@
                             </div>
                             <div class="flex justify-between text-3xl text-green-600">
                                 <span>Total:</span>
-                                <span>170,000.00</span>
+                                <span>{{$total ? response()->currency($total) : "$0.00"}}</span>
                             </div>
                         </div>
                     
@@ -245,12 +265,9 @@
                         <x-table.button color="gray" class="w-1/2 h-14 font-bold">Cancel</x-table.button>
                     </div>
                 </div>
+                <!------CART END----->
 
             </div>
         </main>
-
-        @livewire('pos.select-customer')
-    
-
     </div>
 </div>

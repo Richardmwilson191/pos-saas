@@ -11,13 +11,15 @@ use Illuminate\Support\Facades\Cache;
 
 class Pos extends Component
 {
-   public $cartItems;
+   public $cartItems = [];
    public $msg ;
    public $page = "product";
    public $customerInfo;
    public $customers;
    public $search;
    public $itemQty;
+   public $selectedCustomer;
+   public $total;
 
    protected $listeners = ['msgReset'];
 
@@ -27,10 +29,24 @@ class Pos extends Component
         $this->msg = "";
    }
    
-   public function mount(){
-        $this->cartItems = Cart::where('customer_id', 12)->with('product')->get();
+   public function mount()
+   {   
         $this->customers = Customer::select('customer_name','id')->get();
    }
+
+
+   public function updatedCustomerInfo()
+   {  
+       if(!Customer::where('customer_name', $this->customerInfo['name'])->value('id')){
+            $this->msg = "<script>alert('Customer Not Found! Please select another or Create New!');document.getElementById('selectCustomer').classList.add('animate__animated', 'animate__pulse', 'animate__repeat-3');</script>";
+            $this->emit('msgReset');
+       }
+        $this->customerInfo['id'] = Customer::where('customer_name', $this->customerInfo['name'])->value('id');
+        $this->cartItems = Cart::where('customer_id', $this->customerInfo['id'] ?? 0)->with('product')->get();
+        dd($this->catyItems);
+   }
+
+
     public function render()
     {
         $products = Product::search('name', $this->search)->with(['store','category','brand'])->where('store_id', 1)->get();
@@ -44,6 +60,7 @@ class Pos extends Component
             $this->emit('msgReset');
             return;
         }
+        // dd($this->customerInfo['id']);
         // if(isset($this->itemQty[$productId])){
         //     if($this->itemQty[$productId] > 0){
         //         $this->msg = "<script>alert('Please enter a valid qty!');</script>";
@@ -51,6 +68,11 @@ class Pos extends Component
         //     }
         // }
 
+
+        
+        if($this->itemQty[$productId] == null){
+
+        }
         
         $product = Product::find($productId);
         $product->decrement('qty', $this->itemQty[$productId]);
@@ -64,8 +86,7 @@ class Pos extends Component
             ['qty' => $this->itemQty[$productId], 'price' => $total ]
         );
 
-        dd($cart->id);
-
+        $this->updatedCustomerInfo();
     }
 
    
@@ -86,6 +107,14 @@ class Pos extends Component
         $this->msg = "<script>alertify.success('Successfully Added $customer->customer_name');</script>";
         $this->page = "product";
         $this->customerInfo['id'] = $customer->id;    
+    }
+
+    public function cartDelete($value)
+    {
+        dd($value);
+        Cart::destroy($id);
+        // $this->cartItems = Cart::where('customer_id', $this->customerInfo['id'] ?? 0)->with('product')->get();        
+        $this->cartItems = [];        
     }
  
 }
