@@ -34,12 +34,41 @@ Route::group(['middleware' => 'customer'], function () {
     //Customer Routes Go Here
 });
 
-Route::group(['middleware' => 'merchant'], function () {
-    //Merchant Routes Go Here
-});
-
 Route::group(['middleware' => 'associate'], function () {
     //Associate Routes Go Here
+});
+
+
+Route::group(['prefix' => 'backend/', 'as' => 'backend.','middleware' => 'auth'], function () {
+
+    Route::get('dashboard', AdminDashboard::class)
+        ->name('dashboard');
+
+    Route::get('dashboard/profile', AdminProfile::class)
+        ->name('profile');
+
+    Route::get('inbox', Adminindox::class)
+        ->name('inbox');
+
+
+    Route::group(['middleware' => 'merchant'], function () {
+        //Merchant Routes Go Here
+
+        Route::get('store/createStore', CreateStore::class)
+            ->name('createStore');
+
+        Route::get('store/CreateAssociate', CreateAsscoiate::class)
+            ->name('createAssociate');
+
+        Route::get('store/ViewSalesReport', SalesReport::class)
+            ->name('SalesReport');
+
+    });
+
+    Route::get('store/ViewDetails', ViewDetail::class)
+        ->name('viewDetails');
+
+
 });
 
 ////////////////////////////////// MIDDLEWARES ////////////////////////////////////
@@ -49,31 +78,6 @@ Route::get('/', Index::class)->name('index');
 
 Route::view('/pos', 'pos.pos')->name('pos');
 Route::view('/pos2', 'pos.pos2')->name('pos2');
-
-Route::group(['prefix' => 'storefront', 'as' => 'backend.'], function () {
-
-    Route::get('/backend/dashboard', AdminDashboard::class)
-        ->name('dashboard');
-
-    Route::get('/backend/dashboard/profile', AdminProfile::class)
-        ->name('profile');
-
-    Route::get('/backend/inbox', Adminindox::class)
-        ->name('inbox');
-
-    Route::get('/backend/store/createStore', CreateStore::class)
-        ->name('createStore');
-
-    Route::get('/backend/store/CreateAssociate', CreateAsscoiate::class)
-        ->name('createAssociate');
-
-    Route::get('/backend/store/ViewDetails', ViewDetail::class)
-        ->name('viewDetails');
-
-    Route::get('/backend/store/ViewSalesReport', SalesReport::class)
-        ->name('SalesReport');
-
-});
 
 Route::get('/{storeName}/store', Header::class)
     ->name('storefront');
